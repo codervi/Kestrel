@@ -1,0 +1,57 @@
+@page
+@model Kestrel.Web.Pages.Projects.IndexModel
+@{
+    ViewData["Title"] = "Projects";
+}
+
+<section class="wrap section">
+    <h1>Projects</h1>
+
+    <form method="get" class="filter">
+        <div class="field">
+            <label for="category">Type</label>
+            <select id="category" name="category" onchange="this.form.submit()">
+                <option value="">All types</option>
+                @foreach (var c in Model.Categories)
+                {
+                    <option value="@c.Id" selected="@(Model.CategoryId == c.Id)">@c.Name</option>
+                }
+            </select>
+        </div>
+        <div class="field grow">
+            <label for="q">Search by name or place</label>
+            <input id="q" name="q" value="@Model.Search" />
+        </div>
+        <button type="submit" class="btn">Search</button>
+    </form>
+
+    @if (!Model.Items.Any())
+    {
+        <p class="empty">No projects match this search. <a asp-page="./Index">Clear the filters</a>.</p>
+    }
+    else
+    {
+        <p class="meta">@Model.TotalCount @(Model.TotalCount == 1 ? "project" : "projects")</p>
+        <div class="cards">
+            @foreach (var p in Model.Items)
+            {
+                <partial name="_ProjectCard" model="p" />
+            }
+        </div>
+
+        @if (Model.TotalPages > 1)
+        {
+            <nav class="pager" aria-label="Pages">
+                @if (Model.PageNumber > 1)
+                {
+                    <a asp-page="./Index" asp-route-p="@(Model.PageNumber - 1)" asp-route-category="@Model.CategoryId" asp-route-q="@Model.Search">Previous</a>
+                }
+                <span>Page @Model.PageNumber of @Model.TotalPages</span>
+                @if (Model.PageNumber < Model.TotalPages)
+                {
+                    <a asp-page="./Index" asp-route-p="@(Model.PageNumber + 1)" asp-route-category="@Model.CategoryId" asp-route-q="@Model.Search">Next</a>
+                }
+            </nav>
+        }
+    }
+</section>

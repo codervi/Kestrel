@@ -1,0 +1,74 @@
+@page "{id:int?}"
+@model Kestrel.Web.Pages.Admin.Projects.EditModel
+@{
+    ViewData["Title"] = Model.Id == null ? "Add project" : "Edit project";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form method="post" enctype="multipart/form-data" class="form" novalidate>
+    <div asp-validation-summary="ModelOnly" class="alert alert-error"></div>
+
+    <div class="field">
+        <label asp-for="Input.Title"></label>
+        <input asp-for="Input.Title" />
+        <span asp-validation-for="Input.Title" class="field-error"></span>
+    </div>
+
+    <div class="row">
+        <div class="field">
+            <label asp-for="Input.Location"></label>
+            <input asp-for="Input.Location" placeholder="City, Country" />
+            <span asp-validation-for="Input.Location" class="field-error"></span>
+        </div>
+        <div class="field">
+            <label asp-for="Input.Year"></label>
+            <input asp-for="Input.Year" type="number" />
+            <span asp-validation-for="Input.Year" class="field-error"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="field">
+            <label asp-for="Input.CategoryId"></label>
+            <select asp-for="Input.CategoryId" asp-items="@(new SelectList(Model.Categories, "Id", "Name"))">
+                <option value="0">Select a category</option>
+            </select>
+            <span asp-validation-for="Input.CategoryId" class="field-error"></span>
+        </div>
+        <div class="field">
+            <label asp-for="Input.AreaM2"></label>
+            <input asp-for="Input.AreaM2" type="number" />
+            <span asp-validation-for="Input.AreaM2" class="field-error"></span>
+        </div>
+    </div>
+
+    <div class="field">
+        <label asp-for="Input.ClientName">Client (optional)</label>
+        <input asp-for="Input.ClientName" />
+    </div>
+
+    <div class="field">
+        <label asp-for="Input.Description"></label>
+        <textarea asp-for="Input.Description" rows="6"></textarea>
+        <span asp-validation-for="Input.Description" class="field-error"></span>
+    </div>
+
+    <div class="field">
+        <label for="Image">Cover image (JPG, PNG or WebP, up to 3 MB)</label>
+        @if (!string.IsNullOrEmpty(Model.CurrentImage))
+        {
+            <img class="thumb" src="~/uploads/@Model.CurrentImage" alt="Current cover image" />
+            <label class="check"><input type="checkbox" asp-for="RemoveImage" /> Remove the current image</label>
+        }
+        <input type="file" id="Image" name="Image" accept=".jpg,.jpeg,.png,.webp" />
+        <span asp-validation-for="Image" class="field-error"></span>
+    </div>
+
+    <label class="check"><input asp-for="Input.IsFeatured" /> Show on the home page</label>
+
+    <div class="form-actions">
+        <button type="submit" class="btn">Save project</button>
+        <a class="btn btn-ghost" asp-page="./Index">Cancel</a>
+    </div>
+</form>

@@ -1,0 +1,45 @@
+@{
+    var title = ViewData["Title"] as string;
+    var path = Context.Request.Path.Value ?? "";
+    string Active(string section) => path.StartsWith("/Admin/" + section, StringComparison.OrdinalIgnoreCase) ? "active" : "";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@title | Admin | Kestrel</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="admin">
+    <a class="skip" href="#main">Skip to content</a>
+    <div class="admin-shell">
+        <aside class="sidebar">
+            <a class="brand" asp-page="/Index">Kestrel<span>Engineering</span></a>
+            <p class="meta">Admin panel</p>
+            <nav aria-label="Admin">
+                <a class="@(path.Equals("/Admin", StringComparison.OrdinalIgnoreCase) ? "active" : "")" asp-page="/Admin/Index">Dashboard</a>
+                <a class="@Active("Quotes")" asp-page="/Admin/Quotes/Index">Quote requests</a>
+                <a class="@Active("Projects")" asp-page="/Admin/Projects/Index">Projects</a>
+                <a class="@Active("Categories")" asp-page="/Admin/Categories/Index">Categories</a>
+            </nav>
+            <form asp-page="/Account/Logout" method="post">
+                <button type="submit" class="link-button">Sign out</button>
+            </form>
+        </aside>
+
+        <main id="main" class="admin-main">
+            @if (TempData["Ok"] is string ok)
+            {
+                <div class="alert alert-ok" role="status">@ok</div>
+            }
+            @if (TempData["Error"] is string err)
+            {
+                <div class="alert alert-error" role="alert">@err</div>
+            }
+            @RenderBody()
+        </main>
+    </div>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+</body>
+</html>

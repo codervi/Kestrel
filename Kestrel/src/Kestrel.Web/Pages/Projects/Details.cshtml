@@ -1,0 +1,46 @@
+@page "{id:int}"
+@model Kestrel.Web.Pages.Projects.DetailsModel
+@{
+    ViewData["Title"] = Model.Project.Title;
+}
+
+<section class="wrap narrow section">
+    <a class="back" asp-page="./Index">All projects</a>
+    <h1>@Model.Project.Title</h1>
+
+    @if (!string.IsNullOrEmpty(Model.Project.CoverImage))
+    {
+        <img class="cover" src="~/uploads/@Model.Project.CoverImage" alt="@Model.Project.Title" />
+    }
+
+    <dl class="titleblock titleblock-row">
+        <div><dt>Type</dt><dd>@Model.Project.Category?.Name</dd></div>
+        <div><dt>Location</dt><dd>@Model.Project.Location</dd></div>
+        <div><dt>Completed</dt><dd>@Model.Project.Year</dd></div>
+        @if (Model.Project.AreaM2.HasValue)
+        {
+            <div><dt>Area</dt><dd>@Model.Project.AreaM2.Value.ToString("N0") m&sup2;</dd></div>
+        }
+        @if (!string.IsNullOrEmpty(Model.Project.ClientName))
+        {
+            <div><dt>Client</dt><dd>@Model.Project.ClientName</dd></div>
+        }
+    </dl>
+
+    <p class="lead">@Model.Project.Description</p>
+
+    <p><a class="btn" asp-page="/Quote" asp-route-category="@Model.Project.CategoryId">Ask about a similar project</a></p>
+</section>
+
+@if (Model.Related.Any())
+{
+    <section class="wrap section">
+        <h2>More @Model.Project.Category?.Name.ToLower() projects</h2>
+        <div class="cards">
+            @foreach (var p in Model.Related)
+            {
+                <partial name="_ProjectCard" model="p" />
+            }
+        </div>
+    </section>
+}

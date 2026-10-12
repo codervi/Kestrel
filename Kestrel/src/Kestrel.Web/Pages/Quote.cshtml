@@ -1,0 +1,64 @@
+@page
+@model QuoteModel
+@{
+    ViewData["Title"] = "Request a quote";
+}
+
+<section class="wrap narrow section">
+    <h1>Request a quote</h1>
+    <p class="lead">Describe the project and we will come back with a fee proposal. Most replies go out within two working days.</p>
+
+    <form method="post" class="form" novalidate>
+        <div class="hp" aria-hidden="true">
+            <label>Leave this empty <input name="Website" tabindex="-1" autocomplete="off" /></label>
+        </div>
+
+        <div class="field">
+            <label asp-for="Input.FullName"></label>
+            <input asp-for="Input.FullName" autocomplete="name" />
+            <span asp-validation-for="Input.FullName" class="field-error"></span>
+        </div>
+
+        <div class="row">
+            <div class="field">
+                <label asp-for="Input.Email"></label>
+                <input asp-for="Input.Email" type="email" autocomplete="email" />
+                <span asp-validation-for="Input.Email" class="field-error"></span>
+            </div>
+            <div class="field">
+                <label asp-for="Input.Phone">Phone (optional)</label>
+                <input asp-for="Input.Phone" type="tel" autocomplete="tel" />
+                <span asp-validation-for="Input.Phone" class="field-error"></span>
+            </div>
+        </div>
+
+        <div class="field">
+            <label asp-for="Input.Company">Company (optional)</label>
+            <input asp-for="Input.Company" autocomplete="organization" />
+        </div>
+
+        <div class="row">
+            <div class="field">
+                <label asp-for="Input.CategoryId"></label>
+                <select asp-for="Input.CategoryId" asp-items="@(new SelectList(Model.Categories, "Id", "Name"))">
+                    <option value="0">Select a type</option>
+                </select>
+                <span asp-validation-for="Input.CategoryId" class="field-error"></span>
+            </div>
+            <div class="field">
+                <label asp-for="Input.Budget">Budget (optional)</label>
+                <select asp-for="Input.Budget" asp-items="@(new SelectList(QuoteModel.Budgets))">
+                    <option value="">Prefer not to say</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="field">
+            <label asp-for="Input.Message"></label>
+            <textarea asp-for="Input.Message" rows="6"></textarea>
+            <span asp-validation-for="Input.Message" class="field-error"></span>
+        </div>
+
+        <button type="submit" class="btn">Send request</button>
+    </form>
+</section>

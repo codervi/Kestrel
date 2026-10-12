@@ -1,0 +1,28 @@
+@page
+@model Kestrel.Web.Pages.Account.LoginModel
+@{
+    ViewData["Title"] = "Staff sign in";
+}
+
+<section class="wrap narrow section">
+    <h1>Staff sign in</h1>
+
+    <form method="post" class="form form-small">
+        <input type="hidden" asp-for="ReturnUrl" />
+        <div asp-validation-summary="ModelOnly" class="alert alert-error"></div>
+
+        <div class="field">
+            <label asp-for="Input.Email"></label>
+            <input asp-for="Input.Email" type="email" autocomplete="username" />
+            <span asp-validation-for="Input.Email" class="field-error"></span>
+        </div>
+        <div class="field">
+            <label asp-for="Input.Password"></label>
+            <input asp-for="Input.Password" autocomplete="current-password" />
+            <span asp-validation-for="Input.Password" class="field-error"></span>
+        </div>
+        <label class="check"><input asp-for="Input.RememberMe" /> Keep me signed in</label>
+
+        <button type="submit" class="btn">Sign in</button>
+    </form>
+</section>

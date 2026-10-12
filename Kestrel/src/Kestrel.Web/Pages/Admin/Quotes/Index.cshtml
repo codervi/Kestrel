@@ -1,0 +1,78 @@
+@page
+@model Kestrel.Web.Pages.Admin.Quotes.IndexModel
+@{
+    ViewData["Title"] = "Quote requests";
+}
+
+<h1>Quote requests</h1>
+
+<nav class="filters" aria-label="Filter by status">
+    <a class="@(Model.Filter == null ? "active" : "")" asp-page="./Index">All</a>
+    @foreach (var s in Enum.GetValues<QuoteStatus>())
+    {
+        <a class="@(Model.Filter == s ? "active" : "")" asp-page="./Index" asp-route-status="@s">@s</a>
+    }
+</nav>
+
+@if (!Model.Items.Any())
+{
+    <p class="empty">Nothing here.</p>
+}
+else
+{
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Received</th><th>From</th><th>Project</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+                @foreach (var q in Model.Items)
+                {
+                    <tr>
+                        <td>@q.CreatedAt.ToLocalTime().ToString("d MMM yyyy, HH:mm")</td>
+                        <td>
+                            @q.FullName
+                            @if (!string.IsNullOrEmpty(q.Company)) { <br /><span class="meta">@q.Company</span> }
+                            <br /><a href="mailto:@q.Email">@q.Email</a>
+                            @if (!string.IsNullOrEmpty(q.Phone)) { <br /><span class="meta">@q.Phone</span> }
+                        </td>
+                        <td>
+                            @q.Category?.Name
+                            @if (!string.IsNullOrEmpty(q.Budget)) { <br /><span class="meta">@q.Budget</span> }
+                            <details>
+                                <summary>Message</summary>
+                                <p>@q.Message</p>
+                            </details>
+                        </td>
+                        <td><span class="badge badge-@q.Status.ToString().ToLower()">@q.Status</span></td>
+                        <td class="actions">
+                            <form method="post" asp-page-handler="Status" asp-route-id="@q.Id" asp-route-filter="@Model.Filter" asp-route-p="@Model.PageNumber">
+                                @if (q.Status != QuoteStatus.Reviewed)
+                                {
+                                    <button type="submit" name="newStatus" value="Reviewed" class="btn btn-small">Mark reviewed</button>
+                                }
+                                @if (q.Status != QuoteStatus.Archived)
+                                {
+                                    <button type="submit" name="newStatus" value="Archived" class="btn btn-small btn-ghost">Archive</button>
+                                }
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (Model.TotalPages > 1)
+    {
+        <nav class="pager" aria-label="Pages">
+            @if (Model.PageNumber > 1)
+            {
+                <a asp-page="./Index" asp-route-status="@Model.Filter" asp-route-p="@(Model.PageNumber - 1)">Previous</a>
+            }
+            <span>Page @Model.PageNumber of @Model.TotalPages</span>
+            @if (Model.PageNumber < Model.TotalPages)
+            {
+                <a asp-page="./Index" asp-route-status="@Model.Filter" asp-route-p="@(Model.PageNumber + 1)">Next</a>
+            }
+        </nav>
+    }
+}

@@ -1,0 +1,40 @@
+@page
+@model Kestrel.Web.Pages.Admin.Projects.IndexModel
+@{
+    ViewData["Title"] = "Projects";
+}
+
+<div class="page-head">
+    <h1>Projects</h1>
+    <a class="btn" asp-page="./Edit">Add project</a>
+</div>
+
+@if (!Model.Items.Any())
+{
+    <p class="empty">No projects yet. Add one and it will appear in the public portfolio.</p>
+}
+else
+{
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Project</th><th>Type</th><th>Year</th><th>Featured</th><th>Actions</th></tr></thead>
+            <tbody>
+                @foreach (var p in Model.Items)
+                {
+                    <tr>
+                        <td>@p.Title<br /><span class="meta">@p.Location</span></td>
+                        <td>@p.Category?.Name</td>
+                        <td>@p.Year</td>
+                        <td>@(p.IsFeatured ? "Yes" : "")</td>
+                        <td class="actions">
+                            <a class="btn btn-small btn-ghost" asp-page="./Edit" asp-route-id="@p.Id">Edit</a>
+                            <form method="post" asp-page-handler="Delete" asp-route-id="@p.Id" data-confirm="Delete &quot;@p.Title&quot;? This cannot be undone.">
+                                <button type="submit" class="btn btn-small btn-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

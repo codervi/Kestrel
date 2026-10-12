@@ -1,0 +1,44 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = null;
+}
+
+<section class="hero wrap">
+    <div class="hero-copy">
+        <h1>Structural engineering for buildings that have to last.</h1>
+        <p class="lead">Kestrel is a civil and structural practice. We design, check and supervise, from a single house extension to a harbour car park.</p>
+        <p class="actions">
+            <a class="btn" asp-page="/Quote">Request a quote</a>
+            <a class="btn btn-ghost" asp-page="/Projects/Index">See our projects</a>
+        </p>
+    </div>
+
+    <dl class="titleblock" aria-label="Practice at a glance">
+        <div><dt>Projects in portfolio</dt><dd>@Model.ProjectCount</dd></div>
+        <div><dt>Built area</dt><dd>@Model.TotalArea.ToString("N0") m&sup2;</dd></div>
+        <div><dt>Project types</dt><dd>@Model.CategoryCount</dd></div>
+        <div><dt>Practising since</dt><dd>2009</dd></div>
+    </dl>
+</section>
+
+<section class="section wrap">
+    <div class="section-head">
+        <h2>Recent work</h2>
+        <a asp-page="/Projects/Index">All projects</a>
+    </div>
+    <div class="cards">
+        @foreach (var p in Model.Featured)
+        {
+            <partial name="_ProjectCard" model="p" />
+        }
+    </div>
+</section>
+
+<section class="band">
+    <div class="wrap band-inner">
+        <h2>Have a project in mind?</h2>
+        <p>Tell us what you are building and roughly when. An engineer will reply within two working days.</p>
+        <a class="btn btn-light" asp-page="/Quote">Request a quote</a>
+    </div>
+</section>

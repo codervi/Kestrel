@@ -1,0 +1,44 @@
+@{
+    var title = ViewData["Title"] as string;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@(title == null ? "Kestrel Engineering" : title + " | Kestrel Engineering")</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="site-header">
+        <div class="wrap bar">
+            <a class="brand" asp-page="/Index">Kestrel<span>Engineering</span></a>
+            <nav aria-label="Main">
+                <a asp-page="/Projects/Index">Projects</a>
+                <a asp-page="/Services">Services</a>
+                <a class="btn btn-small" asp-page="/Quote">Request a quote</a>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main">
+        @RenderBody()
+    </main>
+
+    <footer class="site-footer">
+        <div class="wrap bar">
+            <p>Kestrel Engineering is a fictional company. This site is a portfolio project.</p>
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-page="/Admin/Index">Admin panel</a>
+            }
+            else
+            {
+                <a asp-page="/Account/Login">Staff sign in</a>
+            }
+        </div>
+    </footer>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+</body>
+</html>

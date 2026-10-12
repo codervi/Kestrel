@@ -1,0 +1,38 @@
+@page
+@model Kestrel.Web.Pages.Admin.IndexModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h1>Dashboard</h1>
+
+<div class="stats">
+    <a class="stat" asp-page="/Admin/Quotes/Index" asp-route-status="New"><span class="stat-n">@Model.NewQuotes</span> new quote requests</a>
+    <a class="stat" asp-page="/Admin/Projects/Index"><span class="stat-n">@Model.ProjectCount</span> projects</a>
+    <a class="stat" asp-page="/Admin/Categories/Index"><span class="stat-n">@Model.CategoryCount</span> categories</a>
+</div>
+
+<h2>Latest requests</h2>
+@if (!Model.Latest.Any())
+{
+    <p class="empty">No requests yet. They will show up here when someone fills in the quote form.</p>
+}
+else
+{
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Received</th><th>From</th><th>Type</th><th>Status</th></tr></thead>
+            <tbody>
+                @foreach (var q in Model.Latest)
+                {
+                    <tr>
+                        <td>@q.CreatedAt.ToLocalTime().ToString("d MMM, HH:mm")</td>
+                        <td>@q.FullName@(string.IsNullOrEmpty(q.Company) ? "" : ", " + q.Company)</td>
+                        <td>@q.Category?.Name</td>
+                        <td><span class="badge badge-@q.Status.ToString().ToLower()">@q.Status</span></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
